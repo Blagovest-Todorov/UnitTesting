@@ -1,0 +1,79 @@
+using NUnit.Framework;
+
+namespace UnitTesting.Tests
+{
+    [TestFixture]   //attribute that says that the class contains unitTests
+    public class BankAccountTest
+    {
+        private BankAccount bankAccount;
+
+        [SetUp]
+        public void CreateBankAccount() 
+        {
+            bankAccount = new BankAccount(100m);
+        }
+
+        [TearDown]
+        public void DestroyBankAccount() 
+        {
+            bankAccount = null;
+        }
+
+
+        [Test]
+        public void TestNewBankAccount()
+        {
+            //var bankAccount = new BankAccount(100m);
+            Assert.That(bankAccount.Balance, Is.EqualTo(100m),
+                "Creating of new Bank Account");
+
+        }
+
+        [Test]
+        public void TestNewBankAccountNegativeBalance()
+        {
+            Assert.That(() => new BankAccount(-100m),
+                Throws.ArgumentException.With.Message
+                .EqualTo("Balance cant be negative"));
+        }
+
+        [Test]
+        public void TestDeposit() 
+        {
+            bankAccount.Deposit(100m);
+            Assert.That(bankAccount.Balance, Is.EqualTo(200m));
+        }
+
+        [Test]
+        public void TestDepositWithNegativeSum() 
+        {
+            Assert.That(() => bankAccount.Deposit(-50m),
+                Throws.ArgumentException);  //put here the exact expception type !
+        }
+
+        [Test]
+
+        public void TestWithraw() 
+        {
+            decimal balance = bankAccount.Withdraw(34m);
+            Assert.That(bankAccount.Balance, Is.EqualTo(balance));
+        }
+
+        [Test]
+        public void TestWithrawMoreThanBalance() 
+        {
+            Assert.That(() => bankAccount.Withdraw(500), Throws.ArgumentException.With.Message
+                .EqualTo("Balance cant be negative"));  
+        }
+
+        [Test]
+        public void TestWithrawNegativeSum() 
+        {
+            Assert.That(() => bankAccount.Withdraw(-50), Throws.ArgumentException.With.Message
+                .EqualTo("Sum must be positive number"));
+        }
+
+    }
+    // Arrange -> preprare the objects 
+    //Act -> make action over/test action
+    //Assert ->  compare if the result is true
